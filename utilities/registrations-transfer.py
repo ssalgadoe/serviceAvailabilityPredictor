@@ -3,7 +3,7 @@ import csv
 
 
 
-conn = mysql.connect(user='root', password='dupa@123',host='127.0.0.1',database='scraper',  use_unicode=True, charset="utf8")
+conn = mysql.connect(user='root', password='.....',host='.....',database='.....',  use_unicode=True, charset="utf8")
 cursor = conn.cursor()        
 
 
