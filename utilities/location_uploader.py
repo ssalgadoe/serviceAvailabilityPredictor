@@ -12,8 +12,8 @@ import glob
 import csv
 
 #this is for windows
-#conn = mysql.connect(user='root', password='dupa@123',host='127.0.0.1',database='scraper',  use_unicode=True, charset="utf8")
-conn = mysql.connect(user='root', password='dupa@123',host='127.0.0.1',database='routcom',  use_unicode=True, charset="utf8")
+#conn = mysql.connect(user='root', password='.....',host='.....',database='.....',  use_unicode=True, charset="utf8")
+conn = mysql.connect(user='root', password='.....',host='.....',database='.....',  use_unicode=True, charset="utf8")
 cursor = conn.cursor()        
 
 sql = "select * from locations_locations"
