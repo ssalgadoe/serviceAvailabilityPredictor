@@ -1,0 +1,369 @@
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title> Customer Location</title>
+     {% load static %}
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map_canvas {
+        height: 400px;
+        width: 800px;
+        position: relative;
+      }
+
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+
+    </style>
+  </head>
+<body>
+
+
+  <script>
+var cluster_blue=[
+              {
+                url: "{% static 'locations/blue.png' %}",
+                height: 53,
+                width: 53
+              }
+            ];
+
+var cluster_yellow=[
+              {
+                url: "{% static 'locations/yellow.png' %}",
+                height: 53,
+                width: 53
+              }
+             ];
+
+var cluster_red=[
+              {
+                url: "{% static 'locations/red.png' %}",
+                height: 53,
+                width: 53
+              }
+            ];
+
+var cluster_purple=[
+              {
+                url: "{% static 'locations/purple.png' %}",
+                height: 53,
+                width: 53
+              }
+            ];
+
+var cluster_green=[
+              {
+                url: "{% static 'locations/green.png' %}",
+                height: 53,
+                width: 53
+              }
+            ];
+
+var cluster_orange=[
+              {
+                url: "{% static 'locations/orange.png' %}",
+                height: 53,
+                width: 53
+              }
+            ];            
+var cluster_yellow=[
+              {
+                url: "{% static 'locations/yellow.png' %}",
+                height: 53,
+                width: 53
+              }
+            ];                        
+
+var cluster_gray=[
+              {
+                url: "{% static 'locations/gray.png' %}",
+                height: 53,
+                width: 53
+              }
+            ];            
+
+var cluster_magenta=[
+              {
+                url: "{% static 'locations/magenta.png' %}",
+                height: 53,
+                width: 53
+              }
+            ]; 
+
+var mcOptions_blue = {
+    gridSize: 50,
+    styles: cluster_blue,
+    maxZoom: 15
+};
+
+var mcOptions_red = {
+    gridSize: 50,
+    styles: cluster_red,
+    maxZoom: 15
+};
+
+var mcOptions_green = {
+    gridSize: 50,
+    styles: cluster_green,
+    maxZoom: 15
+};
+
+var mcOptions_yellow = {
+    gridSize: 50,
+    styles: cluster_yellow,
+    maxZoom: 15
+};
+
+var mcOptions_purple = {
+    gridSize: 50,
+    styles: cluster_purple,
+    maxZoom: 15
+};
+
+var mcOptions_orange = {
+    gridSize: 50,
+    styles: cluster_orange,
+    maxZoom: 15
+};
+
+var mcOptions_gray = {
+    gridSize: 50,
+    styles: cluster_gray,
+    maxZoom: 15
+};
+
+var mcOptions_magenta = {
+    gridSize: 50,
+    styles: cluster_magenta,
+    maxZoom: 15
+};
+
+  </script>
+  {{label_list|safe}}
+    <div id="map_canvas"></div>
+    <script>
+       var customer_list_active = {{customer_list_active|safe}};
+       var customer_list_site_survey_wait = {{customer_list_sitesurvey|safe}};
+       var customer_list_install_wait = {{customer_list_install|safe}};
+       var customer_list_unable_to_serve = {{customer_list_unable|safe}};
+       var customer_list_response = {{customer_list_response|safe}};
+       var customer_list_distributor = {{customer_list_distributor|safe}};
+       var customer_list_non_wireless = {{customer_list_non_wireless|safe}};
+       var customer_list_other = {{customer_list_other|safe}};   
+       
+       var center_point = {{center_point | safe }};
+       console.log(customer_list_distributor);
+       console.log(customer_list_non_wireless);
+       console.log(center_point);
+    </script>
+
+
+
+    <script>
+      function initMap() {
+        var map = new google.maps.Map(document.getElementById('map_canvas'), {
+          zoom: 12,
+          center: center_point[0]
+        });
+        
+        var infoWindow = new google.maps.InfoWindow();
+         
+        var blue_mark = "{% static 'locations/blue_mark.png' %}";
+        var red_mark = "{% static 'locations/red_mark.png' %}";
+        var green_mark = "{% static 'locations/green_mark.png' %}";
+        var orange_mark = "{% static 'locations/orange_mark.png' %}";
+        var purple_mark = "{% static 'locations/purple_mark.png' %}";
+        var yellow_mark = "{% static 'locations/yellow_mark.png' %}";
+        var gray_mark = "{% static 'locations/gray_mark.png' %}";
+        var magenta_mark = "{% static 'locations/magenta_mark.png' %}";
+
+        var markers_active = [];
+        for (var i = 0; i < customer_list_active.length; i++) {
+            var data = customer_list_active[i];
+            var myLatlng = new google.maps.LatLng(data.lat, data.lng);
+            var marker = new google.maps.Marker({
+                position: myLatlng,
+                map: map,
+                title: data.name,
+                icon: blue_mark
+            });
+            (function (marker, data) {
+                google.maps.event.addListener(marker, "click", function (e) {
+                    infoWindow.setContent("<div style = 'width:200px;min-height:40px'>" + data.name + "<br>" + data.address + "<br>" + "<a href='customer/" + data.id + "'>more info </a>" +  "</div>");
+                    infoWindow.open(map, marker);
+                });
+            })(marker, data);
+                  
+            markers_active.push(marker);
+        }
+        var markerCluster = new MarkerClusterer(map, markers_active,mcOptions_blue);
+
+
+        var markers_site_survey_wait = [];
+        for (var i = 0; i < customer_list_site_survey_wait.length; i++) {
+            var data = customer_list_site_survey_wait[i];
+            var myLatlng = new google.maps.LatLng(data.lat, data.lng);
+            var marker = new google.maps.Marker({
+                position: myLatlng,
+                map: map,
+                title: data.name,
+                icon: red_mark
+            });
+            (function (marker, data) {
+                google.maps.event.addListener(marker, "click", function (e) {
+                    //window.location.href = this.address;
+                    infoWindow.setContent("<div style = 'width:200px;min-height:40px'>" + data.name + "<br>" + data.address + "<br>" + "<a href='customer/" + data.id + "'>more info </a>" +  "</div>");
+                    infoWindow.open(map, marker);
+                });
+            })(marker, data);
+
+            markers_site_survey_wait.push(marker);
+        }
+        var markerCluster_site_survey_wait = new MarkerClusterer(map, markers_site_survey_wait,mcOptions_red);
+
+
+        var markers_install_wait = [];
+        for (var i = 0; i < customer_list_install_wait.length; i++) {
+            var data = customer_list_install_wait[i];
+            var myLatlng = new google.maps.LatLng(data.lat, data.lng);
+            var marker = new google.maps.Marker({
+                position: myLatlng,
+                map: map,
+                title: data.name,
+                icon: green_mark
+            });
+            (function (marker, data) {
+                google.maps.event.addListener(marker, "click", function (e) {
+                    infoWindow.setContent("<div style = 'width:200px;min-height:40px'>" + data.name + "<br>" + data.address + "<br>" + "<a href='customer/" + data.id + "'>more info </a>" +  "</div>");
+                    infoWindow.open(map, marker);
+                });
+            })(marker, data);
+
+            markers_install_wait.push(marker);
+        }
+        var markerCluster_install_wait = new MarkerClusterer(map, markers_install_wait,mcOptions_green);
+
+        var markers_unable_to_serve = [];
+        for (var i = 0; i < customer_list_unable_to_serve.length; i++) {
+            var data = customer_list_unable_to_serve[i];
+            var myLatlng = new google.maps.LatLng(data.lat, data.lng);
+            var marker = new google.maps.Marker({
+                position: myLatlng,
+                map: map,
+                title: data.name,
+                icon: orange_mark
+            });
+            (function (marker, data) {
+                google.maps.event.addListener(marker, "click", function (e) {
+                    infoWindow.setContent("<div style = 'width:200px;min-height:40px'>" + data.name + "<br>" + data.address + "<br>" + "<a href='customer/" + data.id + "'>more info </a>" +  "</div>");
+                    infoWindow.open(map, marker);
+                });
+            })(marker, data);
+
+            markers_unable_to_serve.push(marker);
+        }
+        var markerCluster_unable_to_serve = new MarkerClusterer(map, markers_unable_to_serve,mcOptions_orange);
+
+        var markers_response = [];
+        for (var i = 0; i < customer_list_response.length; i++) {
+            var data = customer_list_response[i];
+            var myLatlng = new google.maps.LatLng(data.lat, data.lng);
+            var marker = new google.maps.Marker({
+                position: myLatlng,
+                map: map,
+                title: data.name,
+                icon: purple_mark
+            });
+            (function (marker, data) {
+                google.maps.event.addListener(marker, "click", function (e) {
+                    infoWindow.setContent("<div style = 'width:200px;min-height:40px'>" + data.name + "<br>" + data.address + "<br>" + "<a href='customer/" + data.id + "'>more info </a>" +  "</div>");
+                    infoWindow.open(map, marker);
+                });
+            })(marker, data);
+
+            markers_response.push(marker);
+        }
+        var markerCluster_response = new MarkerClusterer(map, markers_response,mcOptions_purple);
+
+        var markers_distributor = [];
+        for (var i = 0; i < customer_list_distributor.length; i++) {
+            var data = customer_list_distributor[i];
+            var myLatlng = new google.maps.LatLng(data.lat, data.lng);
+            var marker = new google.maps.Marker({
+                position: myLatlng,
+                map: map,
+                title: data.name,
+                icon: yellow_mark
+            });
+            (function (marker, data) {
+                google.maps.event.addListener(marker, "click", function (e) {
+                    infoWindow.setContent("<div style = 'width:200px;min-height:40px'>" + data.name + "<br>" + data.address + "<br>" + "<a href='customer/" + data.id + "'>more info </a>" +  "</div>");
+                    infoWindow.open(map, marker);
+                });
+            })(marker, data);
+
+            markers_distributor.push(marker);
+        }
+        var markerCluster_distributor = new MarkerClusterer(map, markers_distributor,mcOptions_yellow);
+        
+        var markers_non_wireless = [];
+        for (var i = 0; i < customer_list_non_wireless.length; i++) {
+            var data = customer_list_non_wireless[i];
+            var myLatlng = new google.maps.LatLng(data.lat, data.lng);
+            var marker = new google.maps.Marker({
+                position: myLatlng,
+                map: map,
+                title: data.name,
+                icon: gray_mark
+            });
+            (function (marker, data) {
+                google.maps.event.addListener(marker, "click", function (e) {
+                    infoWindow.setContent("<div style = 'width:200px;min-height:40px'>" + data.name + "<br>" + data.address + "<br>" + "<a href='customer/" + data.id + "'>more info </a>" +  "</div>");
+                    infoWindow.open(map, marker);
+                });
+            })(marker, data);
+
+            markers_non_wireless.push(marker);
+        }
+        var markerCluster_non_wireless = new MarkerClusterer(map, markers_non_wireless,mcOptions_gray);      
+
+
+        var markers_other = [];
+        for (var i = 0; i < customer_list_other.length; i++) {
+            var data = customer_list_other[i];
+            var myLatlng = new google.maps.LatLng(data.lat, data.lng);
+            var marker = new google.maps.Marker({
+                position: myLatlng,
+                map: map,
+                title: data.name,
+                icon: magenta_mark
+            });
+            (function (marker, data) {
+                google.maps.event.addListener(marker, "click", function (e) {
+                    infoWindow.setContent("<div style = 'width:200px;min-height:40px'>" + data.name + "<br>" + data.address + "<br>" + "<a href='customer/" + data.id + "'>more info </a>" +  "</div>");
+                    infoWindow.open(map, marker);
+                });
+            })(marker, data);
+
+            markers_other.push(marker);
+        }
+        var markerCluster_other = new MarkerClusterer(map, markers_other,mcOptions_magenta);  
+
+    }
+    </script>
+    <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD6l2HKrp-1hDGftsxeasdiN4yr9Lg78Tw&callback=initMap">
+    </script>
+
+</body>
+</html>

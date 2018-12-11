@@ -1,0 +1,298 @@
+<html lang="en">
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+         {% load static %}
+     
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map_canvas {
+        height: 400px;
+        width: 800px;
+        position: relative;
+      }
+
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      text {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 13px;
+      }
+
+      span {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 15px;
+      }
+
+      text {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 13px;
+      }
+       .anchor:link    {
+            font-family: 'Montserrat', sans-serif;
+            color:orange;
+            font-size: 25px;
+             text-decoration: none;
+      }
+      table {
+            border-collapse: collapse;
+            font-size: 13px;
+
+      }
+      th, td {
+            padding: 5;
+            font-size: 13px;
+            font-family: 'Montserrat', sans-serif;
+      }
+
+       tr.head {
+            padding: 0;
+            font-size: 13px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: bold;
+            text-align: center;
+      }
+      h1 {
+            font-size: 15px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: bold;
+      }
+
+      h2 {
+            font-size: 18px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: bold;
+      }
+
+      input {
+            font-size: 15px;
+            font-family: 'Montserrat', sans-serif;
+      }
+      select {
+            font-size: 15px;
+            font-family: 'Montserrat', sans-serif;
+      }
+      textarea {
+            font-size: 15px;
+            font-family: 'Montserrat', sans-serif;
+      }
+    </style>
+    <meta charset="UTF-8">
+    <title>{{customer.name}}</title>
+
+</head>
+<body>
+
+ <script>
+var cluster_blue=[
+              {
+                url: "{% static 'locations/blue.png' %}",
+                height: 53,
+                width: 53
+              }
+            ];
+
+var cluster_red=[
+              {
+                url: "{% static 'locations/red.png' %}",
+                height: 53,
+                width: 53
+              }
+            ];
+
+var cluster_green=[
+              {
+                url: "{% static 'locations/green.png' %}",
+                height: 53,
+                width: 53
+              }
+            ];
+
+var cluster_yellow=[
+              {
+                url: "{% static 'locations/yellow.png' %}",
+                height: 53,
+                width: 53
+              }
+            ];                        
+
+
+
+var mcOptions_blue = {
+    gridSize: 50,
+    styles: cluster_blue,
+    maxZoom: 15
+};
+
+var mcOptions_red = {
+    gridSize: 50,
+    styles: cluster_red,
+    maxZoom: 15
+};
+
+var mcOptions_green = {
+    gridSize: 50,
+    styles: cluster_green,
+    maxZoom: 15
+};
+
+var mcOptions_yellow = {
+    gridSize: 50,
+    styles: cluster_yellow,
+    maxZoom: 15
+};
+
+
+var mcOptions_set = [mcOptions_blue, mcOptions_red, mcOptions_green, mcOptions_yellow];
+//console.log(mcOptions_set);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+    var customer = {{customer|safe}}
+    console.log(customer)
+    var select_id = {{select_id}}
+    var center_point = {{center_point|safe}}
+    var neighbour_list = {{neighbour_list|safe}}
+    console.log(neighbour_list)
+    
+</script>
+<a href="/locations/?cust_type={{select_id}}" class="anchor">HOME</a>
+<br>
+<br>    
+<form method="POST" action="">
+{% csrf_token %}
+<table >
+    <tr><td> Name </td>          <td> <input type="text" name='name' value="{{customer.name }}" /> </td></tr>
+    <tr><td> Address 1 </td>     <td> <input type="text" name='address1' value="{{customer.address1}}" /></td></tr>
+    <tr><td> Address 2 </td>     <td> <input type="text" name='address2' value="{{customer.address2}}" /></td></tr>
+    <tr><td> City </td>          <td> <input type="text" name='city' value="{{customer.city}}" /></td></tr>
+    <tr><td> Province </td>       <td> <input type="text" name='province' value="{{customer.province}}" /></td></tr>
+    <tr><td> Postalcode </td>    <td> <input type="text" name='postalcode' value="{{customer.postalcode}}" /></td></tr>
+    <tr><td> Country </td>    <td> <input type="text" name='country' value="{{customer.country}}" /></td></tr>
+    <tr><td> Customer Type </td>    <td> 
+    <select name="cust_type">
+              {% for q in cust_types %}
+                 {% if q  == customer.cust_type %}
+                    <option selected="yes" value={{q}}>{{q}}</option>
+                 {% else %}
+                     <option value={{q}}>{{q}}</option>
+                 {% endif %}   
+              {% endfor %}
+             </select>
+    </td></tr>
+    <tr><td> Comments </td>    <td> <textarea  name='comments' rows="4" cols="50">{{customer.comments}}</textarea></td></tr>
+    <tr><td></td><td> <input name="subject" type="submit" value="Update" /> <input name="subject" type="submit" value="Cancel" /> </td></tr>
+    <tr><td></td><td></td></tr>
+    <tr><td> AP </td>    <td> <input type="text" name='ap_id' value="{{customer.ap_id}}" /></td></tr>
+    <tr><td> Username </td>    <td> <input type="text" name='winbox' value="{{customer.winbox}}" /></td></tr>
+    <tr><td> RSSI </td>    <td> <input type="text" name='rssi' value="{{customer.rssi}}" /></td></tr> 
+    <tr><td> CCQ_TX </td>    <td> <input type="text" name='ccq_tx' value="{{customer.ccq_tx}}" /></td></tr>        
+    <tr><td> CCQ_RX </td>    <td> <input type="text" name='ccq_rx' value="{{customer.ccq_rx}}" /></td></tr>        
+    <tr><td> SNR </td>    <td> <input type="text" name='snr' value="{{customer.snr}}" /></td></tr>        
+</table>
+    <input type="hidden" name="cust_id" value="{{customer.id}}">
+    <input type="hidden" name="winbox" value="{{customer.winbox}}">
+    <input type="hidden" name="lat" value="{{customer.lat}}">
+    <input type="hidden" name="lng" value="{{customer.lng}}">
+    <input type="hidden" name="sitesurvey_ok" value="{{customer.sitesurvey_ok}}">
+</form>
+<br><br>
+
+<div id="map_canvas"></div>
+
+<br><br>
+<table border=1>
+<tr class='head'><td> Customer </td><td> Address </td><td> Access Point</td><td> RSSI </td><td> CCQ_TX </td><td> CCQ_RX </td></tr>
+{% for q in neighbour_list %}
+    <tr><td>{{q.name}} </td><td>{{q.address1}}</td><td>{{q.ap_id}}</td><td>{{q.rssi}}</td><td>{{q.ccq_tx}}</td><td>{{q.ccq_rx}}</td></tr>
+{% endfor %}
+</table>
+
+ <script>
+      function initMap() {
+        var map = new google.maps.Map(document.getElementById('map_canvas'), {
+          zoom: 12,
+          center: center_point
+        });
+        
+        var infoWindow = new google.maps.InfoWindow();
+         
+        var blue_mark = "/static/locations/blue_mark.png";
+        var red_mark = "/static/locations/red_mark.png";
+        var green_mark = "/static/locations/green_mark.png";
+        var yellow_mark = "/static/locations/yellow_mark.png";
+       
+        var marks_set  = ["/static/locations/blue_mark.png",
+                           "/static/locations/red_mark.png",
+                           "/static/locations/green_mark.png",
+                           "/static/locations/yellow_mark.png"
+                           ];
+                           
+
+
+            var markers = [];
+            for (var i = 0; i < neighbour_list.length; i++) {
+                var data = neighbour_list[i];
+                var title = data.name + " /AP: " + data.ap_id + " /RSSI: " + data.rssi;
+                var myLatlng = new google.maps.LatLng(data.lat, data.lng);
+                var marker = new google.maps.Marker({
+                    position: myLatlng,
+                    map: map,
+                    title: title,
+                    icon: marks_set[0]
+                });
+                (function (marker, data) {
+                    google.maps.event.addListener(marker, "click", function (e) {
+                        infoWindow.setContent("<div style = 'width:200px;min-height:40px'>" + data.name + "<br>" + data.address1 + "<br> AP: " + data.ap_id + "<br>  RSSI:" + data.rssi + "<br>  CCQ_TX:" + data.ccq_tx + "<br>  CCQ_RX:" + data.ccq_rx +     "</div>");
+                        infoWindow.open(map, marker);
+                    });
+                })(marker, data);
+                      
+                markers.push(marker);
+            }
+            var data = customer;
+            var myLatlng = new google.maps.LatLng(customer.lat, customer.lng);
+            var marker = new google.maps.Marker({
+                    position: myLatlng,
+                    map: map,
+                    title: data.name,
+                    icon: marks_set[1]
+                });
+               (function (marker, data) {
+                google.maps.event.addListener(marker, "click", function (e) {
+                    infoWindow.setContent("<div style = 'width:200px;min-height:40px'>" + data.name + "<br>" + data.address1 + "<br> AP: " + data.ap_id + "<br>  RSSI:" + data.rssi + "</div>");
+                    infoWindow.open(map, marker);
+                });
+                })(marker, data);        
+                     
+            var markerCluster = new MarkerClusterer(map, markers,mcOptions_set[0]);     
+      }
+    </script>
+    <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD6l2HKrp-1hDGftsxeasdiN4yr9Lg78Tw&callback=initMap">
+    </script>
+
+</body>
+</html>
+

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+    <style>
+      text {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 13px;
+      }
+       .anchor:link    {
+            font-family: 'Montserrat', sans-serif;
+            color:orange;
+            font-size: 25px;
+             text-decoration: none;
+      }
+      table {
+            border-collapse: collapse;
+            font-size: 13px;
+
+      }
+      th, td {
+            padding: 5;
+            font-size: 13px;
+            font-family: 'Montserrat', sans-serif;
+      }
+
+       tr.head {
+            padding: 0;
+            font-size: 13px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: bold;
+            text-align: center;
+      }
+      h1 {
+            font-size: 15px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: bold;
+      }
+
+      h2 {
+            font-size: 18px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: bold;
+      }
+
+      input {
+            font-size: 15px;
+            font-family: 'Montserrat', sans-serif;
+      }
+      select {
+            font-size: 15px;
+            font-family: 'Montserrat', sans-serif;
+      }
+      textarea {
+            font-size: 15px;
+            font-family: 'Montserrat', sans-serif;
+      }
+    </style>
+    <meta charset="UTF-8">
+    <title>{{customer.name}}</title>
+
+</head>
+<body>
+
+<script>
+    var customer = {{customer|safe}}
+    console.log(customer)
+    var select_id = {{select_id}}
+    var neighbour_list = {{neighbour_list|safe}}
+    console.log(neighbour_list)
+    
+</script>
+<a href="/locations/{{select_id}}" class="anchor">HOME</a>
+<br>
+<br>    
+<form method="POST" action="">
+{% csrf_token %}
+<table >
+    <tr><td> Name </td>          <td> <input type="text" name='name' value="{{customer.name }}" /> </td></tr>
+    <tr><td> Address 1 </td>     <td> <input type="text" name='address1' value="{{customer.address1}}" /></td></tr>
+    <tr><td> Address 2 </td>     <td> <input type="text" name='address2' value="{{customer.address2}}" /></td></tr>
+    <tr><td> City </td>          <td> <input type="text" name='city' value="{{customer.city}}" /></td></tr>
+    <tr><td> Province </td>       <td> <input type="text" name='province' value="{{customer.province}}" /></td></tr>
+    <tr><td> Postalcode </td>    <td> <input type="text" name='postalcode' value="{{customer.postalcode}}" /></td></tr>
+    <tr><td> Country </td>    <td> <input type="text" name='country' value="{{customer.country}}" /></td></tr>
+    <tr><td> Customer Type </td>    <td> 
+    <select name="cust_type">
+              {% for q in cust_types %}
+                 {% if q  == customer.cust_type %}
+                    <option selected="yes" value={{q}}>{{q}}</option>
+                 {% else %}
+                     <option value={{q}}>{{q}}</option>
+                 {% endif %}   
+              {% endfor %}
+             </select>
+    </td></tr>
+    <tr><td> Comments </td>    <td> <textarea  name='comments' rows="4" cols="50">{{customer.comments}}</textarea></td></tr>
+    <tr><td></td><td> <input name="subject" type="submit" value="Update" /> <input name="subject" type="submit" value="Cancel" /> </td></tr>
+    <tr><td></td><td></td></tr>
+    <tr><td> AP </td>    <td> <input type="text" name='ap_id' value="{{customer.ap_id}}" /></td></tr>
+    <tr><td> Username </td>    <td> <input type="text" name='winbox' value="{{customer.winbox}}" /></td></tr>
+    <tr><td> RSSI </td>    <td> <input type="text" name='rssi' value="{{customer.rssi}}" /></td></tr> 
+    <tr><td> CCQ_TX </td>    <td> <input type="text" name='ccq_tx' value="{{customer.ccq_tx}}" /></td></tr>        
+    <tr><td> CCQ_RX </td>    <td> <input type="text" name='ccq_rx' value="{{customer.ccq_rx}}" /></td></tr>        
+    <tr><td> SNR </td>    <td> <input type="text" name='snr' value="{{customer.snr}}" /></td></tr>        
+</table>
+    <input type="hidden" name="cust_id" value="{{customer.id}}">
+    <input type="hidden" name="winbox" value="{{customer.winbox}}">
+    <input type="hidden" name="lat" value="{{customer.lat}}">
+    <input type="hidden" name="lng" value="{{customer.lng}}">
+    <input type="hidden" name="sitesurvey_ok" value="{{customer.sitesurvey_ok}}">
+</form>
+<br><br>
+
+
+<br><br>
+<table border=1>
+<tr class='head'><td> Customer </td><td> Address </td><td> Access Point</td><td> RSSI </td><td> CCQ_TX </td><td> CCQ_RX </td></tr>
+{% for q in neighbour_list %}
+    <tr><td>{{q.name}} </td><td>{{q.address1}}</td><td>{{q.ap_id}}</td><td>{{q.rssi}}</td><td>{{q.ccq_tx}}</td><td>{{q.ccq_rx}}</td></tr>
+{% endfor %}
+</table>
